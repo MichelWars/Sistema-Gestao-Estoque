@@ -1,0 +1,24 @@
+services: #especifica cada serviço/container que ira executar para rodar seu projeto
+    sge_web: #nome do container/serviço
+        build: . # caminho do arquivo Dockerfile, nesse caso esta no mesmo diretorio por isso o valor é ponto, caso contrario passaria o caminho relativo do arquivo
+        restart: always # caso receba algum erro, tentar novamente
+        ports: # mapeamento de portas
+            - 8000:8000
+        volumes:
+        - .:/sge # Mapeia o diretório local atual para o diretório /app dentro do container
+        depends_on: #informa que esse container depende do outro para funcionar, então o docker primeiro inicializa o container do db para depois rodar a aplicação
+            - sge_db
+
+    sge_db: #nome do container/serviço
+        image: postgres:15 # baixa a imagem direto do docker hub
+        ports:
+            - 5432:5432
+        volumes: #cria um volume na maquina local para persistir o banco de dados
+            - postgres_data:/var/lib/postgresql/data/
+        environment: #variaveis de ambiente que contem user, senha e nome do banco a serem usados pelo postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=sge
+
+volumes: #cria um volume que sera usado pelo db
+    postgres_data:
