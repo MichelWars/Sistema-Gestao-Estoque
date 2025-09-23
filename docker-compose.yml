@@ -1,6 +1,8 @@
 services: #especifica cada serviço/container que ira executar para rodar seu projeto
     sge_web: #nome do container/serviço
         build: . # caminho do arquivo Dockerfile, nesse caso esta no mesmo diretorio por isso o valor é ponto, caso contrario passaria o caminho relativo do arquivo
+        env_file:
+            - .env
         restart: always # caso receba algum erro, tentar novamente
         ports: # mapeamento de portas
             - 8000:8000
